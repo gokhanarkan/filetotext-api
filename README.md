@@ -1,2 +1,2 @@
 # api.filetotext.io
-Backed API of api.filetotext.io
+Backend API of api.filetotext.io

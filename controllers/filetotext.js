@@ -14,8 +14,8 @@ exports.convertFile = async (req, res, next) => {
 
   try {
     const textract = new AWS.Textract({
-      accessKeyId: "AKIAJQJO5M724V6HG2ZA",
-      secretAccessKey: "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",
+      accessKeyId: process.env.AWS_ACCESS_KEY,
+      secretAccessKey: process.env.AWS_SECRET,
       region: "eu-west-2",
     });
 
