@@ -9,11 +9,10 @@ exports.convertFile = async (req, res, next) => {
     return next(new ErrorResponse("File is not here", 400));
   }
 
-  // Currently accepting only jpeg and png
-  const acceptedTypes = ["image/jpeg", "image/png"];
+  const isFileAccepted = checkFileType(file);
 
-  if (!acceptedTypes.includes(file.mimetype)) {
-    return next(new ErrorResponse("File type is not supported.", 400));
+  if (!isFileAccepted) {
+    return next(new ErrorResponse("File type is not accepted.", 400));
   }
 
   const worker = createWorker();
@@ -41,6 +40,12 @@ exports.convertFileWithAWS = async (req, res, next) => {
 
   if (!file) {
     return next(new ErrorResponse("File is not here", 400));
+  }
+
+  const isFileAccepted = checkFileType(file);
+
+  if (!isFileAccepted) {
+    return next(new ErrorResponse("File type is not accepted.", 400));
   }
 
   try {
@@ -75,3 +80,14 @@ exports.convertFileWithAWS = async (req, res, next) => {
     return next(new ErrorResponse("Error with AWS", 500));
   }
 };
+
+checkFileType = (file) => {
+  // Currently accepting only jpeg and png
+  const acceptedTypes = ["image/jpeg", "image/png"];
+
+  if (!acceptedTypes.includes(file.mimetype)) {
+    return false
+  }
+
+  return true
+}
