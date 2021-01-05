@@ -65,15 +65,17 @@ exports.convertFileWithAWS = async (req, res, next) => {
       if (err) {
         return next(new ErrorResponse("Error with AWS", 500));
       }
-      let responseData = "";
-      data.Blocks.forEach((item) => {
-        if (item.BlockType === "WORD") {
-          responseData += item.Text + " ";
+
+      const text = data.Blocks.reduce((total, value) => {
+        if (value.BlockType === "LINE") {
+          total += value.Text + "\n";
         }
-      });
+        return total;
+      }, "");
+
       res.status(200).json({
         success: true,
-        data: responseData,
+        data: text,
       });
     });
   } catch (err) {
@@ -84,10 +86,5 @@ exports.convertFileWithAWS = async (req, res, next) => {
 checkFileType = (file) => {
   // Currently accepting only jpeg and png
   const acceptedTypes = ["image/jpeg", "image/png"];
-
-  if (!acceptedTypes.includes(file.mimetype)) {
-    return false
-  }
-
-  return true
-}
+  return acceptedTypes.includes(file.mimetype) ? true : false;
+};
